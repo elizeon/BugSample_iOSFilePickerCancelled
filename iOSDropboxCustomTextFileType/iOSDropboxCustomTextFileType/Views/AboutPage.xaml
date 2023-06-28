@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="iOSDropboxCustomTextFileType.Views.AboutPage"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout>
+        <Button Margin="0,10,0,0" Text="Open Document Picker Read"
+                        Clicked="OpenDocumentPicker"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+        <Button Margin="0,10,0,0" Text="Open Document Picker Write"
+                        Clicked="OpenDocumentPickerWrite"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+    </StackLayout>
+
+</ContentPage>
