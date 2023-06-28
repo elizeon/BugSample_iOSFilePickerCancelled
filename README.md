@@ -16,7 +16,7 @@ Steps to Reproduce
 
 2. Click the Open Document Picker Write button
 
-3. Observe that if you choose to save in the default directory, the NSUrl for the new file is not retrieved in an event. To check this, set a breakpoint in the WasCancelled and OnDocPickerFinishedPickingWRITE events and observe that when you click 'Save' in the UIDocument picker to write the new file, it calls only the WasCancelled event which does not have an NSUrl parameter.
+3. Using breakpoints that if you choose to save in the default directory, it calls the WasCancelled event despite choosing a location. This occurs even if you change the file name.
 
 4 Observe that if you choose to save to dropbox or other cloud storage, the correct event is called which gives you an NSUrl. Very odd. Xamarin bug?
 
