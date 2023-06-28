@@ -38,18 +38,33 @@ public class iOSDocumentPicker : Foundation.NSObject
 
     public static async Task WriteFileDialogAsyncTask(NSUrl suggestedNSUrl, string contents)
     {
+
+        /*
+         * 
+         *
+         *To move a Document to an external location, do the following:
+
+            First create a new Document in a local or temporary location.
+            Create a NSUrl that points to the new Document.
+            Open a new Document Picker View Controller and pass it the NSUrl with the Mode of MoveToService .
+            Once the user chooses a new location, the Document will be moved from its current location to the new location.
+            A Reference Document will be written to the app's Application Container so that the file can still be accessed by the creating application.
+
+         * */
+
         /*
          * Use a document picker view controller to select a document to open or export, and optionally copy. Don’t copy the document if you can avoid it. The document picker operates in two modes:
             Open a document. The user selects a document. The document picker provides access to the document, and the user can edit the document in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
             Export a local document. The user selects a destination. The document picker moves the document, and the user can access it and edit it in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
         */
         var docPicker = new UIDocumentPickerViewController(suggestedNSUrl, UIDocumentPickerMode.ExportToService);
-
+        docPicker.AllowsMultipleSelection = false;
         // Set event handlers
         // Note that DidPickDocumentAt is depreciated so we don't use that event. https://developer.apple.com/documentation/uikit/uidocumentpickerdelegate/1618680-documentpicker
+        docPicker.DidPickDocument += delegate (object o, UIDocumentPickedEventArgs e) { OnDocPickerFinishedPickingWRITE(o, e, contents); };
         docPicker.DidPickDocumentAtUrls += delegate (object o, UIDocumentPickedAtUrlsEventArgs e) { OnDocPickerFinishedPickingAtUrlsWRITE(o, e, contents); };
         docPicker.WasCancelled += OnDocPickerCancelled;
-
+        //docPicker.creat
         // Present file picker
         UIWindow window = UIApplication.SharedApplication.KeyWindow;
         var viewController = window.RootViewController;
@@ -197,9 +212,10 @@ public class iOSDocumentPicker : Foundation.NSObject
         readTaskCompletionSource = new TaskCompletionSource<Stream>();
         return readTaskCompletionSource.Task;
     }
-    static async void OnDocPickerCancelled(object sender, EventArgs args)
+    static void OnDocPickerCancelled(object sender, EventArgs args)
     {
-        await App.Instance.MainPage.DisplayAlert("Contents", "test", "Cancel");
+        Console.WriteLine("OnDocPickerCancelled");
+        //await App.Instance.MainPage.DisplayAlert("Contents", "test", "Cancel");
     }
     static void OnDocPickerFinishedPickingREAD(object sender, UIDocumentPickedEventArgs pArgs)
     {
@@ -229,6 +245,20 @@ public class iOSDocumentPicker : Foundation.NSObject
         PickDocUrlRead(pArgs.Urls[0]);
         readTaskCompletionSource.SetResult(null);
     }
+
+    /// <summary>
+    /// Write the file contents to the URL
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="pArgs"></param>
+    static void OnDocPickerFinishedPickingWRITE(object sender, UIDocumentPickedEventArgs pArgs, string contents)
+    {
+        PickDocUrlWrite(pArgs.Url, contents);
+        GenericTextDocument doc = new GenericTextDocument(pArgs.Url);
+        doc.Contents = contents;
+        writeTaskCompletionSource.SetResult(doc);
+    }
+
 
     /// <summary>
     /// Write the file contents to the URL
