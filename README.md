@@ -19,8 +19,3 @@ Steps to Reproduce
 3. Using breakpoints that if you choose to save in the default directory, it calls the WasCancelled event despite choosing a location. This occurs even if you change the file name.
 
 4 Observe that if you choose to save to dropbox or other cloud storage, the correct event is called which gives you an NSUrl. Very odd. Xamarin bug?
-
-
-Conclusion
------------
-I think that it's probably cancelling because you're selecting the original directory where the file already exists!
