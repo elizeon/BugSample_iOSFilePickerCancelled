@@ -38,6 +38,11 @@ public class iOSDocumentPicker : Foundation.NSObject
 
     public static async Task WriteFileDialogAsyncTask(NSUrl suggestedNSUrl, string contents)
     {
+        /*
+         * Use a document picker view controller to select a document to open or export, and optionally copy. Don’t copy the document if you can avoid it. The document picker operates in two modes:
+            Open a document. The user selects a document. The document picker provides access to the document, and the user can edit the document in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
+            Export a local document. The user selects a destination. The document picker moves the document, and the user can access it and edit it in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
+        */
         var docPicker = new UIDocumentPickerViewController(suggestedNSUrl, UIDocumentPickerMode.ExportToService);
 
         // Set event handlers
@@ -72,13 +77,11 @@ public class iOSDocumentPicker : Foundation.NSObject
         NSFileManager fileManager = NSFileManager.DefaultManager;
         NSUrl documentsUrl = fileManager.GetUrls(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User)[0];
         NSUrl newDocumentUrl = documentsUrl.Append(filename, false);
-
-        fileManager.CreateFile(newDocumentUrl.Path, NSData.FromString(contents), new NSDictionary());
-
+        bool newFilecreated = fileManager.CreateFile(newDocumentUrl.Path, NSData.FromString(contents), new NSDictionary());
         return newDocumentUrl;
     }
 
-    public async Task<GenericTextDocument> CreateNewDocument(string filename, string contents)
+    public async Task CreateNewDocument(string filename, string contents)
     {
         NSUrl documentsUrl = GetNewDocumentUrl(filename, contents);
 
