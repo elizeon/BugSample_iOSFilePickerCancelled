@@ -57,8 +57,8 @@ public class iOSDocumentPicker : Foundation.NSObject
             Open a document. The user selects a document. The document picker provides access to the document, and the user can edit the document in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
             Export a local document. The user selects a destination. The document picker moves the document, and the user can access it and edit it in place. Optionally, you can specify that the document picker makes a copy of the document, leaving the original unchanged.
         */
-        var docPicker = new UIDocumentPickerViewController(suggestedNSUrl, UIDocumentPickerMode.ExportToService);
-        docPicker.AllowsMultipleSelection = false;
+        NSUrl[] arr = { suggestedNSUrl };
+        var docPicker = new UIDocumentPickerViewController(arr, true);
         // Set event handlers
         // Note that DidPickDocumentAt is depreciated so we don't use that event. https://developer.apple.com/documentation/uikit/uidocumentpickerdelegate/1618680-documentpicker
         docPicker.DidPickDocument += delegate (object o, UIDocumentPickedEventArgs e) { OnDocPickerFinishedPickingWRITE(o, e, contents); };
